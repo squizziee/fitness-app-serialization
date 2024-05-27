@@ -11,7 +11,7 @@ class RowingFirestoreSerializer extends FirestoreSerializer {
     var session_ = session as RowingSession;
     var exerciseList = [];
     for (var exercise in session_.exercises) {
-      exerciseList.add({"exercise_id": exercise.id});
+      exerciseList.add({"exercise_id": null});
     }
     var serialized = {
       "name": session_.name,
@@ -32,7 +32,6 @@ class RowingFirestoreSerializer extends FirestoreSerializer {
       var type = (await exercise["exercise_id"].get()).data()!;
       exerciseList.add(RowingExercise(
           notes: exercise["notes"],
-          id: exercise["exercise_id"],
           exerciseType:
               RowingExerciseType(name: type["name"], iconURL: type["icon_url"]),
           distanceInMeters: exercise["distance_in_meters"],

@@ -11,7 +11,7 @@ class CombatTrainingFirestoreSerializer extends FirestoreSerializer {
     var session_ = session as CombatTrainingSession;
     var exerciseList = [];
     for (var exercise in session_.exercises) {
-      exerciseList.add({"exercise_id": exercise.id});
+      exerciseList.add({"exercise_id": null});
     }
     var serialized = {
       "name": session_.name,
@@ -31,7 +31,6 @@ class CombatTrainingFirestoreSerializer extends FirestoreSerializer {
       var type = (await exercise["exercise_id"].get()).data()!;
       exerciseList.add(CombatTrainingExercise(
           notes: exercise["notes"],
-          id: exercise["exercise_id"],
           exerciseType: CombatTrainingExerciseType(
               style: exercise["style"],
               name: type["name"],

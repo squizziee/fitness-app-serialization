@@ -26,7 +26,7 @@ class SwimmingFirestoreSerializer extends FirestoreSerializer {
           "time": set_.time
         });
       }
-      exerciseList.add({"Sets": sets, "exercise_id": exercise.id});
+      exerciseList.add({"Sets": sets, "exercise_id": null});
     }
     var serialized = {
       "name": session_.name,
@@ -61,7 +61,6 @@ class SwimmingFirestoreSerializer extends FirestoreSerializer {
       exerciseList.add(SwimmingExercise(
           sets: sets,
           notes: exercise["notes"],
-          id: exercise["exercise_id"],
           exerciseType: SwimmingExerciseType(
               name: type["name"], iconURL: type["icon_url"])));
     }

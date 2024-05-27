@@ -5,13 +5,14 @@ import 'package:flutter_fitness_app/models/cycling/cycling_session.dart';
 import 'package:flutter_fitness_app/models/exercise.dart';
 import 'package:flutter_fitness_app/models/training_session.dart';
 
+// TODO all this does not work because I fucked up references, so I placed null as ref
 class CyclingFirestoreSerializer extends FirestoreSerializer {
   @override
   Map<String, Object?> serializeSession(TrainingSession session) {
     var session_ = session as CyclingSession;
     var exerciseList = [];
     for (var exercise in session_.exercises) {
-      exerciseList.add({"exercise_id": exercise.id});
+      exerciseList.add({"exercise_id": null});
     }
     var serialized = {
       "name": session_.name,
@@ -31,7 +32,6 @@ class CyclingFirestoreSerializer extends FirestoreSerializer {
       var type = (await exercise["exercise_id"].get()).data()!;
       exerciseList.add(CyclingExercise(
           notes: exercise["notes"],
-          id: exercise["exercise_id"],
           exerciseType: CyclingExerciseType(
               name: type["name"], iconURL: type["icon_url"]),
           distanceInMeters: exercise["distance_in_meters"],

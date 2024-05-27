@@ -18,7 +18,8 @@ abstract class FirestoreSerializer {
         trainingType: _dbService.getTrainingType(data["training_type"]),
         schedule: schedule,
         startDate: data["start_date"],
-        cycleDurationInDays: schedule.length);
+        cycleDurationInDays: schedule.length,
+        dayOfPause: data["day_of_pause"]);
   }
 
   Map<String, Object?> serializeRegiment(TrainingRegiment regiment) {
@@ -31,7 +32,8 @@ abstract class FirestoreSerializer {
       "notes": regiment.notes,
       "training_type": regiment.trainingType.toString(),
       "schedule": sessionIdList,
-      "start_date": regiment.startDate
+      "start_date": regiment.startDate,
+      "day_of_pause": regiment.dayOfPause
     };
     return serialized;
   }

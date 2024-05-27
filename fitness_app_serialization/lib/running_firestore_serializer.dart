@@ -11,7 +11,7 @@ class RunningFirestoreSerializer extends FirestoreSerializer {
     var session_ = session as RunningSession;
     var exerciseList = [];
     for (var exercise in session_.exercises) {
-      exerciseList.add({"exercise_id": exercise.id});
+      exerciseList.add({"exercise_id": null});
     }
     var serialized = {
       "name": session_.name,
@@ -32,7 +32,6 @@ class RunningFirestoreSerializer extends FirestoreSerializer {
       var type = (await exercise["exercise_id"].get()).data()!;
       exerciseList.add(RunningExercise(
           notes: exercise["notes"],
-          id: exercise["exercise_id"],
           exerciseType: RunningExerciseType(
               name: type["name"], iconURL: type["icon_url"]),
           heartbeatCeiling: exercise["heartbeat_ceiling"],

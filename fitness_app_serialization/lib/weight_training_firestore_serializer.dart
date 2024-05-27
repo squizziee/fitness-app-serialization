@@ -11,13 +11,23 @@ import 'package:flutter_fitness_app/services/database_service.dart';
 class WeightTrainingFirestoreSerializer extends FirestoreSerializer {
   final DatabaseService _dbService = DatabaseService();
 
+  // TODO deserealize goals too
   @override
   Future<TrainingRegiment> deserializeRegiment(data, ref) async {
     List<TrainingSession> schedule = [];
     var count = 0;
     for (var sessionRef in data["schedule"]) {
-      schedule.add(await deserializeSession(
-          (await sessionRef.get()).data()!, count++, sessionRef));
+      if (sessionRef == null) {
+        schedule.add(WeightTrainingSession(
+            id: null,
+            name: '',
+            notes: '',
+            exercises: [],
+            dayInSchedule: count++));
+      } else {
+        schedule.add(await deserializeSession(
+            (await sessionRef.get()).data()!, count++, sessionRef));
+      }
     }
     return TrainingRegiment(
         name: data["name"],
@@ -25,8 +35,10 @@ class WeightTrainingFirestoreSerializer extends FirestoreSerializer {
         notes: data["notes"],
         trainingType: _dbService.getTrainingType(data["training_type"]),
         schedule: schedule,
-        startDate: data["start_date"].toDate(),
-        cycleDurationInDays: schedule.length);
+        startDate:
+            data["start_date"] == null ? null : data["start_date"].toDate(),
+        cycleDurationInDays: schedule.length,
+        dayOfPause: data["day_of_pause"]);
   }
 
   @override
@@ -41,6 +53,7 @@ class WeightTrainingFirestoreSerializer extends FirestoreSerializer {
       "training_type": regiment.trainingType.toString(),
       "schedule": sessionIdList,
       "start_date": regiment.startDate,
+      "day_of_pause": regiment.dayOfPause
     };
     return serialized;
   }
@@ -60,7 +73,8 @@ class WeightTrainingFirestoreSerializer extends FirestoreSerializer {
           "weight": set_.weightInKilograms
         });
       }
-      exerciseList.add({"Sets": sets, "exercise_id": exercise.id});
+      exerciseList
+          .add({"Sets": sets, "exercise_id": exercise_.exerciseType!.id});
     }
     var serialized = {
       "name": session_.name,
@@ -91,9 +105,8 @@ class WeightTrainingFirestoreSerializer extends FirestoreSerializer {
       var type = (await exercise["exercise_id"].get()).data()!;
       exerciseList.add(WeightTrainingExercise(
           sets: sets,
-          notes: exercise["notes"],
-          id: exercise["exercise_id"],
           exerciseType: WeightExerciseType(
+              id: exercise["exercise_id"],
               name: type["name"],
               bodyPart: type["bodypart"],
               iconURL: type["icon_url"],
@@ -129,8 +142,8 @@ class WeightTrainingFirestoreSerializer extends FirestoreSerializer {
       exerciseList.add(WeightTrainingExercise(
           sets: sets,
           notes: exercise["notes"],
-          id: exercise["exercise_id"],
           exerciseType: WeightExerciseType(
+              id: exercise["exercise_id"],
               name: type["name"],
               bodyPart: type["bodypart"],
               iconURL: type["icon_url"],
