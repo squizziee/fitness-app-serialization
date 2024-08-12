@@ -1,15 +1,16 @@
 import 'package:fitness_app_serialization/firestore_serializer.dart';
-import 'package:flutter_fitness_app/models/exercise.dart';
+import 'package:flutter_fitness_app/models/base/exercise.dart';
 import 'package:flutter_fitness_app/models/rowing/rowing_exercise.dart';
 import 'package:flutter_fitness_app/models/rowing/rowing_exercise_type.dart';
 import 'package:flutter_fitness_app/models/rowing/rowing_session.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/models/base/training_session.dart';
 
 class RowingFirestoreSerializer extends FirestoreSerializer {
   @override
   Map<String, Object?> serializeSession(TrainingSession session) {
     var session_ = session as RowingSession;
     var exerciseList = [];
+    // ignore: unused_local_variable
     for (var exercise in session_.exercises) {
       exerciseList.add({"exercise_id": null});
     }

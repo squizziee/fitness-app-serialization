@@ -1,7 +1,7 @@
 import 'package:fitness_app_serialization/firestore_serializer.dart';
-import 'package:flutter_fitness_app/models/exercise.dart';
-import 'package:flutter_fitness_app/models/training_regiment.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/models/base/exercise.dart';
+import 'package:flutter_fitness_app/models/base/training_regiment.dart';
+import 'package:flutter_fitness_app/models/base/training_session.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_exercise.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_session.dart';
@@ -11,7 +11,6 @@ import 'package:flutter_fitness_app/services/database_service.dart';
 class WeightTrainingFirestoreSerializer extends FirestoreSerializer {
   final DatabaseService _dbService = DatabaseService();
 
-  // TODO deserealize goals too
   @override
   Future<TrainingRegiment> deserializeRegiment(data, ref) async {
     List<TrainingSession> schedule = [];
@@ -29,12 +28,19 @@ class WeightTrainingFirestoreSerializer extends FirestoreSerializer {
             (await sessionRef.get()).data()!, count++, sessionRef));
       }
     }
+
+    List<int> notificationIdList = [];
+    for (var notificationId in data["notification_id_list"]) {
+      notificationIdList.add(notificationId);
+    }
+
     return TrainingRegiment(
         name: data["name"],
         id: ref,
         notes: data["notes"],
         trainingType: _dbService.getTrainingType(data["training_type"]),
         schedule: schedule,
+        notificationIdList: notificationIdList,
         startDate:
             data["start_date"] == null ? null : data["start_date"].toDate(),
         cycleDurationInDays: schedule.length,
@@ -47,13 +53,18 @@ class WeightTrainingFirestoreSerializer extends FirestoreSerializer {
     for (var session in regiment.schedule!) {
       sessionIdList.add(session.id);
     }
+    var notificationIdList = [];
+    for (var notificationId in regiment.notificationIdList!) {
+      notificationIdList.add(notificationId);
+    }
     var serialized = {
       "name": regiment.name,
       "notes": regiment.notes,
       "training_type": regiment.trainingType.toString(),
       "schedule": sessionIdList,
       "start_date": regiment.startDate,
-      "day_of_pause": regiment.dayOfPause
+      "day_of_pause": regiment.dayOfPause,
+      "notification_id_list": notificationIdList
     };
     return serialized;
   }

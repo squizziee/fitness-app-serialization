@@ -2,14 +2,15 @@ import 'package:fitness_app_serialization/firestore_serializer.dart';
 import 'package:flutter_fitness_app/models/combat_training/combat_training_exercise.dart';
 import 'package:flutter_fitness_app/models/combat_training/combat_training_exercise_type.dart';
 import 'package:flutter_fitness_app/models/combat_training/combat_training_session.dart';
-import 'package:flutter_fitness_app/models/exercise.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/models/base/exercise.dart';
+import 'package:flutter_fitness_app/models/base/training_session.dart';
 
 class CombatTrainingFirestoreSerializer extends FirestoreSerializer {
   @override
   Map<String, Object?> serializeSession(TrainingSession session) {
     var session_ = session as CombatTrainingSession;
     var exerciseList = [];
+    // ignore: unused_local_variable
     for (var exercise in session_.exercises) {
       exerciseList.add({"exercise_id": null});
     }

@@ -1,10 +1,10 @@
 import 'package:fitness_app_serialization/firestore_serializer.dart';
-import 'package:flutter_fitness_app/models/exercise.dart';
+import 'package:flutter_fitness_app/models/base/exercise.dart';
 import 'package:flutter_fitness_app/models/swimming/swimming_exercise.dart';
 import 'package:flutter_fitness_app/models/swimming/swimming_exercise_type.dart';
 import 'package:flutter_fitness_app/models/swimming/swimming_session.dart';
 import 'package:flutter_fitness_app/models/swimming/swimming_set.dart';
-import 'package:flutter_fitness_app/models/training_session.dart';
+import 'package:flutter_fitness_app/models/base/training_session.dart';
 import 'package:flutter_fitness_app/models/weight_training/weight_training_session.dart';
 
 class SwimmingFirestoreSerializer extends FirestoreSerializer {

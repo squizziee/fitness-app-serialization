@@ -1,5 +1,4 @@
-import 'package:flutter_fitness_app/models/training_regiment.dart';
-import 'package:flutter_fitness_app/models/user.dart';
+import 'package:flutter_fitness_app/models/base/user.dart';
 
 class AppUserSerializer {
   Map<String, dynamic> serialize(AppUser user) {

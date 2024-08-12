@@ -1,4 +1,5 @@
-import 'package:flutter_fitness_app/models/goal.dart';
+import 'package:flutter_fitness_app/models/base/goal.dart';
+import 'package:flutter_fitness_app/models/weight_training/weight_exercise_type.dart';
 
 class GoalFirestoreSerializer {
   Map<String, dynamic> serializeGoal(Goal goal) {
@@ -12,23 +13,32 @@ class GoalFirestoreSerializer {
     }
     return {
       "deadline": goal.deadline,
-      "exercise_id": goal.exerciseName,
-      "metrics": metrics
+      "exercise_id": goal.exerciseType!.id,
+      "metrics": metrics,
+      "notification_id": goal.notificationId
     };
   }
 
-  Goal deserializeGoal(data) {
+  Future<Goal> deserializeGoal(data, ref) async {
     Set<GoalMetric> metrics = {};
     for (var metric in data["metrics"]) {
       metrics.add(GoalMetric(
         metricName: metric["metric_name"],
-        metricSize: metric["metric_size"],
+        metricSize: metric["metric_size"].toDouble(),
         metricScale: metric["metric_scale"],
       ));
     }
+    var type = (await data["exercise_id"].get()).data()!;
     return Goal(
-        deadline: data["deadline"],
-        exerciseName: data["exercise_id"],
+        deadline: data["deadline"].toDate(),
+        exerciseType: WeightExerciseType(
+            id: data["exercise_id"],
+            name: type["name"],
+            bodyPart: type["bodypart"],
+            iconURL: type["icon_url"],
+            category: type["category"]),
+        id: ref,
+        notificationId: data["notification_id"],
         metrics: metrics);
   }
 }
